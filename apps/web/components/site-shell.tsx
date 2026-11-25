@@ -2,9 +2,9 @@ import { Film, Search } from 'lucide-react';
 import Link from 'next/link';
 
 export function Brand() {
-  return <Link className="brand" href="/" aria-label="컷로그 홈">
+  return <Link className="brand" href="/" aria-label="덕점판 홈">
     <span className="brand-icon"><Film size={21} strokeWidth={2.4} /></span>
-    <span>CUT<span>LOG</span></span>
+    <span>덕<span>점판</span></span>
   </Link>;
 }
 
