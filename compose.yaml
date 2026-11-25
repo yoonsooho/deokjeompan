@@ -1,0 +1,42 @@
+x-app: &app
+  image: cutlog:local
+  build: .
+  restart: unless-stopped
+
+services:
+  api:
+    <<: *app
+    command: ["node", "apps/api/dist/main.js"]
+    environment:
+      API_HOST: 0.0.0.0
+      DATABASE_PATH: /app/data/cutlog.sqlite
+      SEED_SAMPLE_REVIEWS: "false"
+    volumes:
+      - database:/app/data
+
+  web:
+    <<: *app
+    command: ["npm", "run", "start:web"]
+    environment:
+      API_URL: http://api:4000/api
+      SITE_URL: https://${SITE_HOST:?Set SITE_HOST to the public hostname}
+    depends_on:
+      - api
+
+  proxy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      SITE_HOST: ${SITE_HOST:?Set SITE_HOST to the public hostname}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - certificates:/data
+    depends_on:
+      - web
+
+volumes:
+  database:
+  certificates:
