@@ -1,6 +1,7 @@
 x-app: &app
-  image: cutlog:local
-  build: .
+  # 빌드는 GitHub Actions가 하고, 서버는 GHCR에 올라간 이미지를 받아서 실행만 한다.
+  # IMAGE_TAG에는 배포할 커밋 SHA를 넣는다. (.env 파일 또는 환경변수)
+  image: ghcr.io/yoonsooho/deokjeompan:${IMAGE_TAG:?Set IMAGE_TAG to the commit SHA to deploy}
   restart: unless-stopped
 
 services:
